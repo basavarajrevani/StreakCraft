@@ -13,7 +13,7 @@ Ensure you have pushed the latest version of your code to GitHub.
 1. Log in to [MongoDB Atlas](https://www.mongodb.com/cloud/atlas).
 2. **Network Access**: Add `0.0.0.0/0` (Allow access from everywhere) temporarily, or find Render's IP outbound addresses.
 3. **Database Access**: Ensure you have a user with `readWrite` permissions.
-4. **Connection String**: Copy your connection string (e.g., `mongodb+srv://user:pass@cluster.mongodb.net/streakcraft`).
+4. **Connection String**: Copy your connection string (e.g., `mongodb+srv://<username>:<password>@cluster.mongodb.net/streakcraft`).
 
 ---
 
