@@ -19,13 +19,14 @@ import ExportButton from '../components/ExportButton';
 import AchievementHall from '../components/AchievementHall';
 import ProgressForecast from '../components/ProgressForecast';
 import { useCelebration } from '../components/CelebrationProvider';
-import { LogOut, Calendar, BarChart2, Activity, Database, Trophy, TrendingUp } from 'lucide-react';
+import { LogOut, Calendar, BarChart2, Activity, Database, Trophy, TrendingUp, Menu, X } from 'lucide-react';
 
 const Dashboard = () => {
     const { fireConfetti } = useCelebration();
     const [habits, setHabits] = useState([]);
     const [logs, setLogs] = useState([]);
     const [user, setUser] = useState(null);
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [selectedMonth, setSelectedMonth] = useState(() => {
         const d = new Date();
         return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}`;
@@ -129,11 +130,23 @@ const Dashboard = () => {
                             <div className="w-8 h-8 bg-accent-primary rounded-lg flex items-center justify-center text-white font-black group-hover:scale-110 transition-transform cursor-pointer shadow-lg shadow-accent-primary/20" onClick={() => navigate('/')}>S</div>
                             <h1 className="text-lg font-black text-text-dark tracking-tight hidden xs:block">StreakCraft</h1>
                         </div>
-                        <div className="scale-90 xs:scale-100 origin-right sm:origin-left">
-                            <MonthSelector selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
+                        <div className="flex items-center gap-2">
+                            <div className="scale-90 xs:scale-100 origin-right sm:origin-left">
+                                <MonthSelector selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
+                            </div>
+                            {/* Mobile Menu Toggle */}
+                            <button
+                                className="sm:hidden p-2 text-text-muted hover:text-accent-primary transition-colors"
+                                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                                aria-label="Toggle Menu"
+                            >
+                                {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                            </button>
                         </div>
                     </div>
-                    <div className="flex items-center justify-between w-full sm:w-auto gap-2">
+
+                    {/* Desktop Utility Group */}
+                    <div className="hidden sm:flex items-center justify-between w-full sm:w-auto gap-2">
                         <div className="flex items-center bg-slate-100 dark:bg-slate-800/50 rounded-xl px-0.5 xs:px-1">
                             <ExportButton habits={habits} logs={logs} selectedMonth={selectedMonth} />
                             <div className="h-4 w-[1px] bg-border-color mx-0.5 opacity-50"></div>
@@ -150,6 +163,34 @@ const Dashboard = () => {
                             </button>
                         </div>
                     </div>
+
+                    {/* Mobile Menu Overlay */}
+                    {isMenuOpen && (
+                        <div className="sm:hidden w-full pt-4 pb-2 space-y-4 animate-in slide-in-from-top-2 duration-300">
+                            <div className="flex flex-col gap-4 bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-border-color/50">
+                                <div className="flex items-center justify-between bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm">
+                                    <span className="text-xs font-black uppercase text-text-muted">Export & Reports</span>
+                                    <ExportButton habits={habits} logs={logs} selectedMonth={selectedMonth} />
+                                </div>
+                                <div className="flex items-center justify-between bg-white dark:bg-slate-900 p-3 rounded-xl shadow-sm">
+                                    <span className="text-xs font-black uppercase text-text-muted">Rank Level</span>
+                                    <LevelProgress user={user} />
+                                </div>
+                                <div className="flex items-center justify-between p-1">
+                                    <div className="flex items-center gap-3">
+                                        <ThemeToggle />
+                                        <span className="text-xs font-bold text-text-dark">Appearance</span>
+                                    </div>
+                                    <button
+                                        onClick={handleLogout}
+                                        className="flex items-center gap-2 px-4 py-2 bg-accent-danger/10 text-accent-danger rounded-xl font-black text-xs uppercase tracking-wider"
+                                    >
+                                        <LogOut size={16} /> Logout
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
             </header>
 

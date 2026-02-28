@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import {
     Zap, Activity, BarChart2, ShieldCheck,
     ArrowRight, Trophy, Sparkles, Download,
-    LayoutDashboard, CheckCircle, Smartphone
+    LayoutDashboard, CheckCircle, Smartphone,
+    Menu, X
 } from 'lucide-react';
 
 const Landing = () => {
     const navigate = useNavigate();
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
     const token = localStorage.getItem('token');
 
     return (
@@ -15,12 +17,14 @@ const Landing = () => {
             {/* Navbar */}
             <nav className="fixed top-0 w-full z-50 bg-white/70 dark:bg-slate-900/70 backdrop-blur-xl border-b border-border-color transition-colors duration-300">
                 <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
-                    <div className="flex items-center gap-2 group cursor-pointer" onClick={() => navigate('/')}>
+                    <div className="flex items-center gap-2 group cursor-pointer" onClick={() => { setIsMenuOpen(false); navigate('/'); }}>
                         <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-black group-hover:scale-110 transition-transform">S</div>
                         <span className="text-xl font-black tracking-tight">StreakCraft</span>
                     </div>
 
-                    <div className="flex items-center gap-2 xs:gap-4 md:gap-6">
+                    {/* Desktop Navigation */}
+                    <div className="hidden md:flex items-center gap-2 xs:gap-4 md:gap-6">
+                        <a href="#features" className="text-sm font-bold text-text-muted hover:text-indigo-600 transition-colors">Features</a>
                         {token ? (
                             <Link to="/dashboard" className="text-[10px] xs:text-xs md:text-sm font-bold text-indigo-600 hover:text-indigo-700 flex items-center gap-1">
                                 <span className="hidden xs:inline">Go to Dashboard</span> <ArrowRight size={14} />
@@ -34,7 +38,57 @@ const Landing = () => {
                             </>
                         )}
                     </div>
+
+                    {/* Mobile Menu Button */}
+                    <button
+                        className="md:hidden p-2 text-text-muted hover:text-indigo-600 transition-colors"
+                        onClick={() => setIsMenuOpen(!isMenuOpen)}
+                        aria-label="Toggle Menu"
+                    >
+                        {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+                    </button>
                 </div>
+
+                {/* Mobile Menu Overlay */}
+                {isMenuOpen && (
+                    <div className="md:hidden absolute top-16 left-0 w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border-b border-border-color p-6 shadow-2xl animate-in slide-in-from-top-5 duration-300">
+                        <div className="flex flex-col gap-6">
+                            <a
+                                href="#features"
+                                className="text-lg font-bold text-text-muted hover:text-indigo-600"
+                                onClick={() => setIsMenuOpen(false)}
+                            >
+                                Features
+                            </a>
+                            {token ? (
+                                <Link
+                                    to="/dashboard"
+                                    className="text-lg font-bold text-indigo-600 flex items-center justify-between"
+                                    onClick={() => setIsMenuOpen(false)}
+                                >
+                                    Go to Dashboard <ArrowRight size={20} />
+                                </Link>
+                            ) : (
+                                <>
+                                    <Link
+                                        to="/login"
+                                        className="text-lg font-bold text-text-muted hover:text-indigo-600"
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        Login
+                                    </Link>
+                                    <Link
+                                        to="/register"
+                                        className="w-full py-4 bg-indigo-600 text-white text-lg font-black rounded-2xl flex items-center justify-center gap-2"
+                                        onClick={() => setIsMenuOpen(false)}
+                                    >
+                                        Get Started <ArrowRight size={20} />
+                                    </Link>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                )}
             </nav>
 
             {/* Hero Section */}
